@@ -1,6 +1,30 @@
-import javax.swing.*;
+//import javax.swing.*;
+//
+//public class SpaceInvaders extends JFrame {
+//
+//    public SpaceInvaders() {
+//
+//        initUI();
+//    }
+//
+//    private void initUI() {
+//
+//        add(new Game());
+//
+//        setTitle("Space Invaders");
+//        setSize(Constants.BOARD_WIDTH, Constants.BOARD_HEIGHT);
+//
+//        setDefaultCloseOperation(EXIT_ON_CLOSE);
+//        setResizable(false);
+//        setLocationRelativeTo(null);
+//    }
+//
+//}
 
-public class SpaceInvaders extends JFrame {
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+
+public class SpaceInvaders extends JFrame  {
 
     public SpaceInvaders() {
 
@@ -9,14 +33,22 @@ public class SpaceInvaders extends JFrame {
 
     private void initUI() {
 
-        add(new Game());
+        add(new Board());
 
         setTitle("Space Invaders");
-        setSize(1200, 800);
+        setSize(Constants.BOARD_WIDTH, Constants.BOARD_HEIGHT);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
     }
 
+    public static void main(String[] args) {
+
+        EventQueue.invokeLater(() -> {
+
+            var ex = new SpaceInvaders();
+            ex.setVisible(true);
+        });
+    }
 }
