@@ -188,7 +188,9 @@ public class Panel extends JPanel {
                 });
 
         scoresFrame.getContentPane().add(scoresPanel);
+        scoresFrame.setLocationRelativeTo(null);
         scoresFrame.setVisible(true);
+        scoresFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void update() {
@@ -303,8 +305,8 @@ public class Panel extends JPanel {
         g.setFont(font);
         g.setColor(Color.white);
         FontMetrics metrics = g.getFontMetrics(font);
-        int x = getWidth() - metrics.stringWidth(scoreText) - 10; // Position from the right edge
-        int y = 20; // Position from the top
+        int x = getWidth() - metrics.stringWidth(scoreText) - 10;
+        int y = 20;
         g.drawString(scoreText, x, y);
     }
 

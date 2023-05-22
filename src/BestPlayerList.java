@@ -3,13 +3,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BestPlayerList {
-    private static final String FILE_PATH = "topten.txt";
-    private static final int MAX_SCORES = 10;
 
     public static List<ScoreEntry> getTopTenScores() {
         List<ScoreEntry> topTenScores = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(Constants.FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(":");
@@ -30,12 +28,12 @@ public class BestPlayerList {
         public static void addScore(String nickname, int score) {
             List<ScoreEntry> topTenScores = getTopTenScores();
             topTenScores.add(new ScoreEntry(nickname, score));
-            topTenScores.sort((s1, s2) -> Integer.compare(s2.getScore(), s1.getScore()));
-            if (topTenScores.size() > MAX_SCORES) {
-                topTenScores = topTenScores.subList(0, MAX_SCORES);
+            topTenScores.sort((user, secondUser) -> Integer.compare(secondUser.getScore(), user.getScore()));
+            if (topTenScores.size() > Constants.MAX_SCORES) {
+                topTenScores = topTenScores.subList(0, Constants.MAX_SCORES);
             }
 
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.FILE_PATH))) {
                 for (ScoreEntry entry : topTenScores) {
                     writer.write(entry.getNickname() + ":" + entry.getScore());
                     writer.newLine();

@@ -7,7 +7,7 @@ public class GameConfig {
         String[] difficultyOptions = { "1", "2", "3" };
         int selectedDifficulty = JOptionPane.showOptionDialog(null, "Choose difficulty level:", "Difficulty Level",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, difficultyOptions, difficultyOptions[0]);
-        int difficultyLevel = selectedDifficulty + 1; // Map selected option to difficulty level (1-3)
+        int difficultyLevel = selectedDifficulty + 1;
 
         Constants.setDifficultyLevel(difficultyLevel);
 

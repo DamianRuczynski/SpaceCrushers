@@ -18,6 +18,9 @@ public class Constants {
     public static final int CHANCE = 5; // chance to drop the bomb by the alien
     public static final int DELAY = 17;
 
+    public static final String FILE_PATH = "topten.txt";
+    public static final int MAX_SCORES = 10;
+
 //    ICONS CONFIG
 
     public static final int ALIEN_HEIGHT = 12;
