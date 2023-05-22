@@ -44,8 +44,6 @@ public class Panel extends JPanel {
 
 
     private void gameInit() {
-
-//        nickname = JOptionPane.showInputDialog("Enter your nickname:");
         aliens = new ArrayList<>();
         for (int i = 0; i < Constants.LINES_OF_ENEMIES; i++) {
             for (int j = 0; j < Constants.COLUMNS_OF_ENEMIES; j++) {
@@ -138,8 +136,29 @@ public class Panel extends JPanel {
         g.drawString(message, (Constants.BOARD_WIDTH - 30) / 2,
                 Constants.BOARD_WIDTH / 2);
 
+        int dialogResult = JOptionPane.showConfirmDialog(
+                this,
+                "Do you want to play again?",
+                "Game Over",
+                JOptionPane.YES_NO_OPTION
+        );
 
-        showTopTenScores();
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            startNewGame();
+        } else {
+            showTopTenScores();
+            setVisible(false);
+        }
+    }
+
+    private void startNewGame() {
+        score = 0;
+        deaths = 0;
+        message = "Game Over";
+        explosionImage = Constants.EXPLOSION_ICON;
+        inGame = true;
+        timer.start();
+        gameInit();
     }
 
     private void showTopTenScores() {

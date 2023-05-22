@@ -2,15 +2,7 @@ import javax.swing.*;
 
 public class GameConfig {
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                configureGame();
-            }
-        });
-    }
-
-    private static void configureGame() {
+    public static void configureGame() {
         String nickname = JOptionPane.showInputDialog("Enter your nickname:");
         String[] difficultyOptions = { "1", "2", "3" };
         int selectedDifficulty = JOptionPane.showOptionDialog(null, "Choose difficulty level:", "Difficulty Level",
