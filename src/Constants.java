@@ -38,4 +38,5 @@ public class Constants {
     public static final String ALIEN_ICON = "src/images/alien.png";
     public static final int PLAYER_START_X = 270;
     public static final int PLAYER_START_Y = 280;
+    public static final int SCORE_THRESHOLD = NUMBER_OF_ALIENS_TO_DESTROY;
 }

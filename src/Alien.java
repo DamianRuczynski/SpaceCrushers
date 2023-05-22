@@ -16,7 +16,7 @@ public class Alien extends Sprite {
 
         bomb = new Bomb(x, y);
 
-        var alienImg = "src/images/alien.png";
+        var alienImg = Constants.ALIEN_ICON;
         var ii = new ImageIcon(alienImg);
 
         setImage(ii.getImage());
@@ -48,7 +48,7 @@ public class Alien extends Sprite {
             this.x = x;
             this.y = y;
 
-            var bombImg = "src/images/bomb.png";
+            var bombImg = Constants.BOMB_ICON;
             var ii = new ImageIcon(bombImg);
             setImage(ii.getImage());
         }

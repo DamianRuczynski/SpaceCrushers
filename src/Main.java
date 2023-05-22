@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 
 public class Main {
@@ -5,5 +6,6 @@ public class Main {
     public static void main(String[] args) {
         SpaceInvaders game = new SpaceInvaders();
         game.setVisible(true);
+        game.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 }

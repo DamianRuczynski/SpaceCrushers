@@ -11,13 +11,16 @@ import java.util.Random;
 
 public class Panel extends JPanel {
     private boolean inGame = true;
+    private int score = 0;
     private int direction = -1;
     private int deaths = 0;
     private String message = "Game Over";
     private String explosionImage = Constants.EXPLOSION_ICON;
+    private String nickname;
     private Dimension dimension;
     private List<Alien> aliens;
     private Player player;
+    ;
     private Shot shot;
 
     private Timer timer;
@@ -25,7 +28,6 @@ public class Panel extends JPanel {
 
     public Panel() {
         this.initBoard();
-//        this.gameInit();
     }
 
     private void initBoard() {
@@ -35,8 +37,6 @@ public class Panel extends JPanel {
         setBackground(Color.black);
 
 
-
-
         timer = new Timer(Constants.DELAY, new GameCycle());
         timer.start();
         this.gameInit();
@@ -44,6 +44,8 @@ public class Panel extends JPanel {
 
 
     private void gameInit() {
+
+//        nickname = JOptionPane.showInputDialog("Enter your nickname:");
         aliens = new ArrayList<>();
         for (int i = 0; i < Constants.LINES_OF_ENEMIES; i++) {
             for (int j = 0; j < Constants.COLUMNS_OF_ENEMIES; j++) {
@@ -52,11 +54,16 @@ public class Panel extends JPanel {
                 aliens.add(alien);
             }
         }
+
         player = new Player();
         shot = new Shot();
 
         ButtonPanel buttonField = new ButtonPanel(player);
         add(buttonField);
+
+        JButton shotButton = new JButton("Shot");
+        shotButton.addActionListener(new ShotButtonListener());
+        add(shotButton);
     }
 
     private void drawAliens(Graphics g) {
@@ -99,6 +106,7 @@ public class Panel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         doDrawing(g);
+        drawScore(g);
     }
 
     private void doDrawing(Graphics g) {
@@ -118,7 +126,6 @@ public class Panel extends JPanel {
             }
             gameOver(g);
         }
-//        Toolkit.getDefaultToolkit().sync();
     }
 
     private void gameOver(Graphics g) {
@@ -130,6 +137,16 @@ public class Panel extends JPanel {
         g.drawRect(50, Constants.BOARD_WIDTH / 2 - 30, Constants.BOARD_WIDTH - 100, 50);
         g.drawString(message, (Constants.BOARD_WIDTH - 30) / 2,
                 Constants.BOARD_WIDTH / 2);
+
+        g.drawString("Your Score: " + score, (Constants.BOARD_WIDTH + 80) / 2, Constants.BOARD_WIDTH / 2 + 20);
+
+        List<ScoreEntry> topTenScores = BestPlayerList.getTopTenScores();
+        int y = Constants.BOARD_WIDTH / 2 + 40;
+        g.drawString("Top 10 Scores:", (Constants.BOARD_WIDTH) / 2, y);
+        for (int i = 0; i < topTenScores.size(); i++) {
+            ScoreEntry entry = topTenScores.get(i);
+            g.drawString((i + 1) + ". " + entry.getNickname() + " - " + entry.getScore(), (Constants.BOARD_WIDTH - 80) / 2, y + 20 * (i + 1));
+        }
     }
 
     private void update() {
@@ -155,6 +172,7 @@ public class Panel extends JPanel {
                         alien.setDying(true);
                         deaths++;
                         shot.die();
+                        score++;
                     }
                 }
             }
@@ -233,7 +251,36 @@ public class Panel extends JPanel {
 
     private void doGameCycle() {
         update();
+        checkTopTen();
         repaint();
+    }
+
+    private void drawScore(Graphics g) {
+        String scoreText = "Score: " + score;
+        Font font = new Font("Arial", Font.BOLD, 16);
+        g.setFont(font);
+        g.setColor(Color.white);
+        FontMetrics metrics = g.getFontMetrics(font);
+        int x = getWidth() - metrics.stringWidth(scoreText) - 10; // Position from the right edge
+        int y = 20; // Position from the top
+        g.drawString(scoreText, x, y);
+    }
+
+    private void fireShot() {
+        int x = player.getX();
+        int y = player.getY();
+        if (inGame) {
+            if (!shot.isVisible()) {
+                shot = new Shot(x, y);
+            }
+        }
+    }
+
+    private void checkTopTen() {
+        if (score >= Constants.SCORE_THRESHOLD) {
+            BestPlayerList.addScore(nickname, score);
+            JOptionPane.showMessageDialog(this, "Congratulations! You made it to the top 10!");
+        }
     }
 
     private class GameCycle implements ActionListener {
@@ -247,20 +294,25 @@ public class Panel extends JPanel {
         @Override
         public void keyReleased(KeyEvent e) {
             player.keyReleased(e);
+            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            }
         }
+
         @Override
         public void keyPressed(KeyEvent e) {
             player.keyPressed(e);
-            int x = player.getX();
-            int y = player.getY();
-            int key = e.getKeyCode();
-            if (key == KeyEvent.VK_SPACE) {
-                if (inGame) {
-                    if (!shot.isVisible()) {
-                        shot = new Shot(x, y);
-                    }
-                }
+            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                fireShot();
             }
         }
     }
+
+    private class ShotButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            fireShot();
+        }
+    }
+
+
 }
