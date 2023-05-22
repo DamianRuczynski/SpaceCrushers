@@ -39,4 +39,13 @@ public class Constants {
     public static final int PLAYER_START_X = 270;
     public static final int PLAYER_START_Y = 280;
     public static final int SCORE_THRESHOLD = NUMBER_OF_ALIENS_TO_DESTROY;
+    public static int DIFFICULTY_LEVEL = 1; // Default difficulty level
+
+    public static int getDifficultyLevel() {
+        return DIFFICULTY_LEVEL;
+    }
+
+    public static void setDifficultyLevel(int level) {
+        DIFFICULTY_LEVEL = level;
+    }
 }

@@ -283,6 +283,11 @@ public class Panel extends JPanel {
         }
     }
 
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+
     private class GameCycle implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
