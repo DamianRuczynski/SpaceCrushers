@@ -138,15 +138,38 @@ public class Panel extends JPanel {
         g.drawString(message, (Constants.BOARD_WIDTH - 30) / 2,
                 Constants.BOARD_WIDTH / 2);
 
-        g.drawString("Your Score: " + score, (Constants.BOARD_WIDTH + 80) / 2, Constants.BOARD_WIDTH / 2 + 20);
+
+        showTopTenScores();
+    }
+
+    private void showTopTenScores() {
+
 
         List<ScoreEntry> topTenScores = BestPlayerList.getTopTenScores();
-        int y = Constants.BOARD_WIDTH / 2 + 40;
-        g.drawString("Top 10 Scores:", (Constants.BOARD_WIDTH) / 2, y);
-        for (int i = 0; i < topTenScores.size(); i++) {
-            ScoreEntry entry = topTenScores.get(i);
-            g.drawString((i + 1) + ". " + entry.getNickname() + " - " + entry.getScore(), (Constants.BOARD_WIDTH - 80) / 2, y + 20 * (i + 1));
-        }
+
+        JFrame scoresFrame = new JFrame("Top 10 Scores");
+        scoresFrame.setSize(300, 300);
+
+        JPanel scoresPanel = new JPanel();
+        scoresPanel.setLayout(new BoxLayout(scoresPanel, BoxLayout.Y_AXIS));
+
+        JLabel userScore = new JLabel();
+        userScore.setText("Your Score: " + score);
+        scoresPanel.add(userScore);
+
+        JLabel titleLabel = new JLabel("Top 10 Scores:");
+        scoresPanel.add(titleLabel);
+
+
+        topTenScores.stream()
+                .map(user -> (topTenScores.indexOf(user) + 1) + ". " + user.getNickname() + " - " + user.getScore())
+                .forEach(scoreText -> {
+                    JLabel scoreLabel = new JLabel(scoreText);
+                    scoresPanel.add(scoreLabel);
+                });
+
+        scoresFrame.getContentPane().add(scoresPanel);
+        scoresFrame.setVisible(true);
     }
 
     private void update() {

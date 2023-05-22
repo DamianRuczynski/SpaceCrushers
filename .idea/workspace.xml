@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="547291bc-4f83-4f96-8d9e-aee4a7a1b067" name="Changes" comment="add score into game">
-      <change afterPath="$PROJECT_DIR$/src/GameConfig.java" afterDir="false" />
+    <list default="true" id="547291bc-4f83-4f96-8d9e-aee4a7a1b067" name="Changes" comment="add simple configuration">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Panel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Panel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -84,7 +82,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684246053767</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="add simple configuration">
+      <created>1684770299360</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1684770299360</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -104,6 +109,7 @@
     <MESSAGE value="declare first classes, display UI" />
     <MESSAGE value="display first game, scretch version" />
     <MESSAGE value="add buttons and simple movement logic, need to correct movement to be more fluent nd also add action on shot button" />
-    <option name="LAST_COMMIT_MESSAGE" value="add buttons and simple movement logic, need to correct movement to be more fluent nd also add action on shot button" />
+    <MESSAGE value="add simple configuration" />
+    <option name="LAST_COMMIT_MESSAGE" value="add simple configuration" />
   </component>
 </project>
