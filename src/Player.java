@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 
-public class Player extends Sprite {
+public class Player extends Sprite implements Movable {
     private int width;
     public Player() {
         initPlayer();

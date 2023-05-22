@@ -1,6 +1,6 @@
 import javax.swing.ImageIcon;
 
-public class Alien extends Sprite {
+public class Alien extends Sprite implements Movable {
 
     private Bomb bomb;
 
@@ -22,8 +22,12 @@ public class Alien extends Sprite {
         setImage(ii.getImage());
     }
 
-    public void act(int direction) {
+    @Override
+    public void act() {
 
+    }
+
+    public void act(int direction) {
         this.x += direction;
     }
 

@@ -1,6 +1,6 @@
 import java.awt.Image;
 
-public class Sprite {
+public class Sprite implements Positionable{
     int x;
     int y;
     int dx;
