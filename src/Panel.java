@@ -64,6 +64,40 @@ public class Panel extends JPanel {
         add(shotButton);
     }
 
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+
+//DRAWING
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        doDrawing(g);
+        drawScore(g);
+    }
+
+    private void doDrawing(Graphics g) {
+        g.setColor(Color.black);
+        g.fillRect(0, 0, dimension.width, dimension.height);
+        g.setColor(Color.green);
+        if (inGame) {
+            g.drawLine(0, Constants.GROUND_Y,
+                    Constants.BOARD_WIDTH, Constants.GROUND_Y);
+            drawAliens(g);
+            drawPlayer(g);
+            drawShot(g);
+            drawBombing(g);
+        } else {
+            if (timer.isRunning()) {
+                timer.stop();
+            }
+            gameOver(g);
+        }
+    }
+
+
     private void drawAliens(Graphics g) {
         for (Alien alien : aliens) {
             if (alien.isVisible()) {
@@ -100,31 +134,17 @@ public class Panel extends JPanel {
         }
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        doDrawing(g);
-        drawScore(g);
+    private void drawScore(Graphics g) {
+        String scoreText = "Score: " + score;
+        Font font = new Font("Arial", Font.BOLD, 16);
+        g.setFont(font);
+        g.setColor(Color.white);
+        FontMetrics metrics = g.getFontMetrics(font);
+        int x = getWidth() - metrics.stringWidth(scoreText) - 10;
+        int y = 20;
+        g.drawString(scoreText, x, y);
     }
-
-    private void doDrawing(Graphics g) {
-        g.setColor(Color.black);
-        g.fillRect(0, 0, dimension.width, dimension.height);
-        g.setColor(Color.green);
-        if (inGame) {
-            g.drawLine(0, Constants.GROUND_Y,
-                    Constants.BOARD_WIDTH, Constants.GROUND_Y);
-            drawAliens(g);
-            drawPlayer(g);
-            drawShot(g);
-            drawBombing(g);
-        } else {
-            if (timer.isRunning()) {
-                timer.stop();
-            }
-            gameOver(g);
-        }
-    }
+//    GAME OVER
 
     private void gameOver(Graphics g) {
         g.setColor(Color.black);
@@ -162,8 +182,6 @@ public class Panel extends JPanel {
     }
 
     private void showTopTenScores() {
-
-
         List<ScoreEntry> topTenScores = BestPlayerList.getTopTenScores();
 
         JFrame scoresFrame = new JFrame("Top 10 Scores");
@@ -193,11 +211,18 @@ public class Panel extends JPanel {
         scoresFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
+    // ON GAME METHODS
+
+    private void doGameCycle() {
+        update();
+        checkTopTen();
+        repaint();
+    }
     private void update() {
         if (deaths == Constants.NUMBER_OF_ALIENS_TO_DESTROY) {
             inGame = false;
             timer.stop();
-            message = "Game won!";
+            message = "There is a winner. Congratulations!";
         }
         player.act();
         if (shot.isVisible()) {
@@ -228,18 +253,26 @@ public class Panel extends JPanel {
                 shot.setY(shotPosition);
             }
         }
-        for (Alien alien : aliens) {
-            int x = alien.getX();
-            if (x >= (Constants.BOARD_WIDTH - Constants.BORDER_RIGHT) && direction != -1) {
-                direction = -1;
-                moveAliensDown(aliens);
-            }
-            if (x <= Constants.BORDER_LEFT && direction != 1) {
-                direction = 1;
-                moveAliensDown(aliens);
-            }
-        }
+        checkAlienBoundary(aliens);
 
+
+        checkAlienPosition(aliens);
+
+        for (Alien alien : aliens) {
+           dropBomb(alien);
+        }
+    }
+
+    private void checkTopTen() {
+        if (score >= Constants.SCORE_THRESHOLD) {
+            BestPlayerList.addScore(nickname, score);
+            JOptionPane.showMessageDialog(this, "Congratulations! You made it to the top 10!");
+        }
+    }
+
+//    ALIEN MOVEMENT AND ACTING
+
+    private void checkAlienPosition(List<Alien> aliens) {
         Iterator<Alien> iterator = aliens.iterator();
         while (iterator.hasNext()) {
             Alien alien = iterator.next();
@@ -252,35 +285,49 @@ public class Panel extends JPanel {
                 alien.act(direction);
             }
         }
-        Random bombPositionGenerator = new Random();
+    }
+
+    private void dropBomb(Alien alien) {
+        int shot = (int) (Math.random() * 50);
+        Alien.Bomb bomb = alien.getBomb();
+        if (shot == Constants.CHANCE && alien.isVisible() && bomb.isDestroyed()) {
+            bomb.setDestroyed(false);
+            bomb.setX(alien.getX());
+            bomb.setY(alien.getY());
+        }
+        int bombX = bomb.getX();
+        int bombY = bomb.getY();
+        int playerX = player.getX();
+        int playerY = player.getY();
+        if (player.isVisible() && !bomb.isDestroyed()) {
+            if (bombX >= (playerX)
+                    && bombX <= (playerX + Constants.PLAYER_WIDTH)
+                    && bombY >= (playerY)
+                    && bombY <= (playerY + Constants.PLAYER_HEIGHT)) {
+                ImageIcon explosion = new ImageIcon(explosionImage);
+                player.setImage(explosion.getImage());
+                player.setDying(true);
+                bomb.setDestroyed(true);
+            }
+        }
+        if (!bomb.isDestroyed()) {
+            bomb.setY(bomb.getY() + 1);
+            if (bomb.getY() >= Constants.GROUND_Y - Constants.BOMB_HEIGHT) {
+                bomb.setDestroyed(true);
+            }
+        }
+    }
+
+    private void checkAlienBoundary(List<Alien> aliens) {
         for (Alien alien : aliens) {
-            int shot = bombPositionGenerator.nextInt(50);
-            Alien.Bomb bomb = alien.getBomb();
-            if (shot == Constants.CHANCE && alien.isVisible() && bomb.isDestroyed()) {
-                bomb.setDestroyed(false);
-                bomb.setX(alien.getX());
-                bomb.setY(alien.getY());
+            int x = alien.getX();
+            if (x >= (Constants.BOARD_WIDTH - Constants.BORDER_RIGHT) && direction != -1) {
+                direction = -1;
+                moveAliensDown(aliens);
             }
-            int bombX = bomb.getX();
-            int bombY = bomb.getY();
-            int playerX = player.getX();
-            int playerY = player.getY();
-            if (player.isVisible() && !bomb.isDestroyed()) {
-                if (bombX >= (playerX)
-                        && bombX <= (playerX + Constants.PLAYER_WIDTH)
-                        && bombY >= (playerY)
-                        && bombY <= (playerY + Constants.PLAYER_HEIGHT)) {
-                    var explosion = new ImageIcon(explosionImage);
-                    player.setImage(explosion.getImage());
-                    player.setDying(true);
-                    bomb.setDestroyed(true);
-                }
-            }
-            if (!bomb.isDestroyed()) {
-                bomb.setY(bomb.getY() + 1);
-                if (bomb.getY() >= Constants.GROUND_Y - Constants.BOMB_HEIGHT) {
-                    bomb.setDestroyed(true);
-                }
+            if (x <= Constants.BORDER_LEFT && direction != 1) {
+                direction = 1;
+                moveAliensDown(aliens);
             }
         }
     }
@@ -293,22 +340,9 @@ public class Panel extends JPanel {
         }
     }
 
-    private void doGameCycle() {
-        update();
-        checkTopTen();
-        repaint();
-    }
+    //GAME STEERAGE METHODS
 
-    private void drawScore(Graphics g) {
-        String scoreText = "Score: " + score;
-        Font font = new Font("Arial", Font.BOLD, 16);
-        g.setFont(font);
-        g.setColor(Color.white);
-        FontMetrics metrics = g.getFontMetrics(font);
-        int x = getWidth() - metrics.stringWidth(scoreText) - 10;
-        int y = 20;
-        g.drawString(scoreText, x, y);
-    }
+
 
     private void fireShot() {
         int x = player.getX();
@@ -318,17 +352,6 @@ public class Panel extends JPanel {
                 shot = new Shot(x, y);
             }
         }
-    }
-
-    private void checkTopTen() {
-        if (score >= Constants.SCORE_THRESHOLD) {
-            BestPlayerList.addScore(nickname, score);
-            JOptionPane.showMessageDialog(this, "Congratulations! You made it to the top 10!");
-        }
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
 

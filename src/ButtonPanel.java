@@ -9,7 +9,6 @@ public class ButtonPanel extends JPanel implements ActionListener {
     private Player player;
     private JButton leftButton;
     private JButton rightButton;
-    private JButton shotButton;
 
     public ButtonPanel(Player player) {
         this.player = player;

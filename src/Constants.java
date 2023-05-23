@@ -11,7 +11,7 @@ public class Constants {
 
 
     //    GAME CONFIG
-    public static final int LINES_OF_ENEMIES = 1;
+    public static final int LINES_OF_ENEMIES = 3;
     public static final int COLUMNS_OF_ENEMIES = 3;
     public static final int NUMBER_OF_ALIENS_TO_DESTROY = COLUMNS_OF_ENEMIES * LINES_OF_ENEMIES;
     public static final int GO_DOWN = 15;
@@ -50,5 +50,10 @@ public class Constants {
 
     public static void setDifficultyLevel(int level) {
         DIFFICULTY_LEVEL = level;
+        setAliensCols(getDifficultyLevel());
+    }
+
+    private static void setAliensCols(int level) {
+
     }
 }

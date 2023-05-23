@@ -8,9 +8,7 @@ public class Player extends Sprite implements Movable {
     }
 
     private void initPlayer() {
-
         ImageIcon playerImage = new ImageIcon(Constants.PLAYER_ICON);
-
         width = playerImage.getImage().getWidth(null);
         setImage(playerImage.getImage());
         setX(Constants.PLAYER_START_X);
@@ -32,23 +30,14 @@ public class Player extends Sprite implements Movable {
         if (key == KeyEvent.VK_LEFT) {
             dx = -2;
         }
-
         if (key == KeyEvent.VK_RIGHT) {
             dx = 2;
         }
     }
 
     public void keyReleased(KeyEvent e) {
-
         int key = e.getKeyCode();
-
-        if (key == KeyEvent.VK_LEFT) {
-
-            dx = 0;
-        }
-
-        if (key == KeyEvent.VK_RIGHT) {
-
+        if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT) {
             dx = 0;
         }
     }
