@@ -215,7 +215,6 @@ public class Panel extends JPanel {
 
     private void doGameCycle() {
         update();
-        checkTopTen();
         repaint();
     }
     private void update() {
@@ -261,6 +260,8 @@ public class Panel extends JPanel {
         for (Alien alien : aliens) {
            dropBomb(alien);
         }
+
+        checkTopTen();
     }
 
     private void checkTopTen() {

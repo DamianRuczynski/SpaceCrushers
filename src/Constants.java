@@ -12,8 +12,8 @@ public class Constants {
 
     //    GAME CONFIG
     public static final int LINES_OF_ENEMIES = 3;
-    public static final int COLUMNS_OF_ENEMIES = 3;
-    public static final int NUMBER_OF_ALIENS_TO_DESTROY = COLUMNS_OF_ENEMIES * LINES_OF_ENEMIES;
+    public static int COLUMNS_OF_ENEMIES = 3;
+    public static int NUMBER_OF_ALIENS_TO_DESTROY = COLUMNS_OF_ENEMIES * LINES_OF_ENEMIES;
     public static final int GO_DOWN = 15;
     public static final int CHANCE = 5; // chance to drop the bomb by the alien
     public static final int DELAY = 17;
@@ -41,7 +41,7 @@ public class Constants {
     public static final String ALIEN_ICON = "src/images/alien.png";
     public static final int PLAYER_START_X = 270;
     public static final int PLAYER_START_Y = 280;
-    public static final int SCORE_THRESHOLD = NUMBER_OF_ALIENS_TO_DESTROY;
+    public static int SCORE_THRESHOLD = NUMBER_OF_ALIENS_TO_DESTROY;
     public static int DIFFICULTY_LEVEL = 1; // Default difficulty level
 
     public static int getDifficultyLevel() {
@@ -54,6 +54,8 @@ public class Constants {
     }
 
     private static void setAliensCols(int level) {
-
+        COLUMNS_OF_ENEMIES *= level;
+        NUMBER_OF_ALIENS_TO_DESTROY *= level;
+        SCORE_THRESHOLD = NUMBER_OF_ALIENS_TO_DESTROY;
     }
 }
