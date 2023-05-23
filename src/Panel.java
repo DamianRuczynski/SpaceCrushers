@@ -24,6 +24,7 @@ public class Panel extends JPanel {
     private Shot shot;
 
     private Timer timer;
+    private GameMenu gameMenu;
 
 
     public Panel() {
@@ -35,7 +36,7 @@ public class Panel extends JPanel {
         setFocusable(true);
         dimension = new Dimension(Constants.BOARD_WIDTH, Constants.BOARD_HEIGHT);
         setBackground(Color.black);
-
+        gameMenu = new GameMenu();
 
         timer = new Timer(Constants.DELAY, new GameCycle());
         timer.start();
@@ -179,6 +180,13 @@ public class Panel extends JPanel {
         inGame = true;
         timer.start();
         gameInit();
+    }
+    private void showMenu() {
+        timer.stop();
+        gameMenu.setVisible(true);
+        if (!gameMenu.isOptionSelected()) {
+            timer.start();
+        }
     }
 
     private void showTopTenScores() {
@@ -367,15 +375,14 @@ public class Panel extends JPanel {
         @Override
         public void keyReleased(KeyEvent e) {
             player.keyReleased(e);
-            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            }
         }
-
         @Override
         public void keyPressed(KeyEvent e) {
             player.keyPressed(e);
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                 fireShot();
+            } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                showMenu();
             }
         }
     }
@@ -384,6 +391,61 @@ public class Panel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             fireShot();
+        }
+    }
+
+    private class GameMenu extends JFrame {
+        private boolean optionSelected = false;
+
+        public GameMenu() {
+            setTitle("Menu");
+            setSize(300, 200);
+            setLayout(new BorderLayout());
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            setLocationRelativeTo(null);
+
+            JButton resumeButton = new JButton("Resume Game");
+            JButton rulesButton = new JButton("Show Rules");
+            JButton restartButton = new JButton("Restart Game");
+            JButton exitButton = new JButton("Exit");
+
+            resumeButton.addActionListener(e -> {
+                optionSelected = true;
+                setVisible(false);
+                timer.start();
+            });
+
+            rulesButton.addActionListener(e -> {
+                optionSelected = true;
+                JOptionPane.showMessageDialog(this, Constants.GAME_RULES);
+                setVisible(false);
+                timer.start();
+            });
+
+            restartButton.addActionListener(e -> {
+                optionSelected = true;
+                startNewGame();
+                setVisible(false);
+            });
+
+            exitButton.addActionListener(e -> {
+                optionSelected = true;
+                showTopTenScores();
+                setVisible(false);
+            });
+
+            JPanel menuPanel = new JPanel();
+            menuPanel.setLayout(new GridLayout(4, 1));
+            menuPanel.add(resumeButton);
+            menuPanel.add(rulesButton);
+            menuPanel.add(restartButton);
+            menuPanel.add(exitButton);
+
+            add(menuPanel, BorderLayout.CENTER);
+        }
+
+        public boolean isOptionSelected() {
+            return optionSelected;
         }
     }
 
